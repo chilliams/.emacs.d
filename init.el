@@ -35,7 +35,6 @@
   )
 
 
-;; packages
 ;; melpa
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -56,53 +55,60 @@ There are two things you can do about this warning:
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
+
+;; packages
+(defun set-up-packages ()
+  (setq
+   package-selected-packages
+   '(
+     exec-path-from-shell
+     helm
+     helm-ag
+     helm-projectile
+     magit
+     projectile
+     use-package
+     which-key
+     ))
+
+  ;; force installed to match selected
+  (package-refresh-contents)
+  (package-install-selected-packages)
+  (package-autoremove))
+(set-up-packages)
+
 ;; use-package
 (eval-when-compile
   (require 'use-package))
 
 ;; install packages
 (use-package exec-path-from-shell
-  :ensure t
   :config
   (exec-path-from-shell-initialize))
 
 (use-package helm
-  :ensure t
   :config
-  (require 'helm-config)
   (helm-mode 1)
   (global-set-key (kbd "M-x") #'helm-M-x)
   (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
   (global-set-key (kbd "C-x C-f") #'helm-find-files))
 
+(use-package helm-ag
+  :config
+  (setq helm-ag-base-command "rg --vimgrep --no-heading --max-columns 1000 "))
+
 (use-package projectile
-  :ensure t
   :config
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 (use-package helm-projectile
-  :ensure t
   :config
-  (require 'helm-projectile)
   (helm-projectile-on))
 
-(use-package lsp-mode
-  :ensure t
-  :config
-  (require 'lsp-mode))
-
-(use-package lsp-java
-  :ensure t
-  :config
-  (require 'lsp-java)
-  (add-hook 'java-mode-hook #'lsp))
-
-(use-package magit
-  :ensure t)
+(use-package magit)
 
 (use-package which-key
-  :ensure t
   :config
   (which-key-mode))
 
@@ -188,6 +194,15 @@ a shell (with its need to quote arguments)."
 
 
 ;; useful functions
+(defun show-and-copy-buffer-filename ()
+  "Show and copy the full path to the current file in the minibuffer."
+  (interactive)
+  ;; list-buffers-directory is the variable set in dired buffers
+  (let ((file-name (or (buffer-file-name) list-buffers-directory)))
+    (if file-name
+        (message (kill-new file-name))
+      (error "Buffer not visiting a file"))))
+
 (defun apply-function-to-region (fn)
   (save-excursion
     (let* ((beg (region-beginning))
