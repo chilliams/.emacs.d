@@ -10,6 +10,11 @@
 (setq mac-pass-command-to-system nil)
 (set-frame-font "Monaco-14")
 
+;; backups
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 ;; history
 (setq history-length 100)
@@ -56,6 +61,11 @@ There are two things you can do about this warning:
   (require 'use-package))
 
 ;; install packages
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package helm
   :ensure t
   :config
@@ -64,9 +74,6 @@ There are two things you can do about this warning:
   (global-set-key (kbd "M-x") #'helm-M-x)
   (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
   (global-set-key (kbd "C-x C-f") #'helm-find-files))
-
-(use-package magit
-  :ensure t)
 
 (use-package projectile
   :ensure t
@@ -80,6 +87,20 @@ There are two things you can do about this warning:
   (require 'helm-projectile)
   (helm-projectile-on))
 
+(use-package lsp-mode
+  :ensure t
+  :config
+  (require 'lsp-mode))
+
+(use-package lsp-java
+  :ensure t
+  :config
+  (require 'lsp-java)
+  (add-hook 'java-mode-hook #'lsp))
+
+(use-package magit
+  :ensure t)
+
 (use-package which-key
   :ensure t
   :config
@@ -87,6 +108,7 @@ There are two things you can do about this warning:
 
 ;; global keybinds
 (global-set-key (kbd "C-`") 'other-frame)
+(global-set-key (kbd "C-x C-j") #'dired-jump)
 (global-set-key (kbd "C-c o") (lambda ()
 				(interactive)
 				(other-window -1)))
