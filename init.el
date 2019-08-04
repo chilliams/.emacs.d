@@ -1,3 +1,25 @@
+;;; init.el --- My Emacs init file
+
+;;; Commentary:
+
+;; After years of using Spacemacs, I've decided to venture out on my own.
+
+;;; Code:
+
+;; bootstrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 ;; basic emacs tweaks
 (setq async-shell-command-buffer 'confirm-kill-process)
 (setq backward-delete-char-untabify-method 'hungry)
@@ -34,87 +56,37 @@
   (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
   )
 
+(straight-use-package 'helm)
+(helm-mode 1)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
+(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
 
-;; melpa
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl
-    (warn "\
-Your version of Emacs does not support SSL connections,
-which is unsafe because it allows man-in-the-middle attacks.
-There are two things you can do about this warning:
-1. Install an Emacs version that does support SSL and be safe.
-2. Remove this warning from your init file so you won't see it again."))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
+(straight-use-package 'helm-ag)
+(setq helm-ag-base-command "rg --vimgrep --no-heading --max-columns 1000 ")
 
+(straight-use-package 'projectile)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-;; packages
-(defun set-up-packages ()
-  (setq
-   package-selected-packages
-   '(
-     exec-path-from-shell
-     helm
-     helm-ag
-     helm-projectile
-     magit
-     projectile
-     use-package
-     which-key
-     ))
+(straight-use-package 'helm-projectile)
+(helm-projectile-on)
 
-  ;; force installed to match selected
-  (package-refresh-contents)
-  (package-install-selected-packages)
-  (package-autoremove))
-(set-up-packages)
+(straight-use-package 'magit)
 
-;; use-package
-(eval-when-compile
-  (require 'use-package))
+(straight-use-package 'which-key)
+(which-key-mode)
 
-;; install packages
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
-
-(use-package helm
-  :config
-  (helm-mode 1)
-  (global-set-key (kbd "M-x") #'helm-M-x)
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  (global-set-key (kbd "C-x C-f") #'helm-find-files))
-
-(use-package helm-ag
-  :config
-  (setq helm-ag-base-command "rg --vimgrep --no-heading --max-columns 1000 "))
-
-(use-package projectile
-  :config
-  (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
-(use-package helm-projectile
-  :config
-  (helm-projectile-on))
-
-(use-package magit)
-
-(use-package which-key
-  :config
-  (which-key-mode))
+(straight-use-package 'mwim)
+(global-set-key (kbd "C-a") 'mwim-beginning)
+(global-set-key (kbd "C-e") 'mwim-end)
 
 ;; global keybinds
 (global-set-key (kbd "C-`") 'other-frame)
-(global-set-key (kbd "C-x C-j") #'dired-jump)
+(require 'dired)
+(global-set-key (kbd "C-x C-j") 'dired-jump)
 (global-set-key (kbd "C-c o") (lambda ()
 				(interactive)
 				(other-window -1)))
@@ -225,7 +197,6 @@ a shell (with its need to quote arguments)."
 
 ;; go
 (defun go-run-tests (args)
-  (interactive)
   (save-selected-window
     (async-shell-command (concat "go test -v " args))))
 
@@ -248,3 +219,24 @@ a shell (with its need to quote arguments)."
 ;; for java
 (add-hook 'c-mode-common-hook (lambda ()
 				(subword-mode)))
+
+;; syntax checking
+(straight-use-package 'flycheck)
+(global-flycheck-mode)
+
+(straight-use-package 'flycheck-pkg-config)
+
+;; nix
+(straight-use-package 'nix-mode)
+
+(straight-use-package 'nix-sandbox)
+(setq flycheck-command-wrapper-function
+      (lambda (command) (apply 'nix-shell-command (nix-current-sandbox) command))
+      flycheck-executable-find
+      (lambda (cmd) (nix-executable-find (nix-current-sandbox) cmd)))
+
+(straight-use-package 'direnv)
+(direnv-mode)
+
+(provide 'init)
+;;; init.el ends here
