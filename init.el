@@ -31,6 +31,7 @@
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
 (set-frame-font "Monaco-14")
+(show-paren-mode 1)
 
 ;; backups
 (setq backup-directory-alist
@@ -222,21 +223,28 @@ a shell (with its need to quote arguments)."
 
 ;; syntax checking
 (straight-use-package 'flycheck)
-(global-flycheck-mode)
+;; (global-flycheck-mode)
 
-(straight-use-package 'flycheck-pkg-config)
+;; (straight-use-package 'flycheck-pkg-config)
 
 ;; nix
 (straight-use-package 'nix-mode)
 
 (straight-use-package 'nix-sandbox)
-(setq flycheck-command-wrapper-function
-      (lambda (command) (apply 'nix-shell-command (nix-current-sandbox) command))
-      flycheck-executable-find
-      (lambda (cmd) (nix-executable-find (nix-current-sandbox) cmd)))
+;; (setq flycheck-command-wrapper-function
+;;       (lambda (command) (apply 'nix-shell-command (nix-current-sandbox) command))
+;;       flycheck-executable-find
+;;       (lambda (cmd) (nix-executable-find (nix-current-sandbox) cmd)))
 
 (straight-use-package 'direnv)
 (direnv-mode)
+
+(straight-use-package 'lsp-mode)
+(setq lsp-enable-snippet nil)
+(add-hook 'c-mode-hook #'lsp)
+
+(straight-use-package 'ccls)
+(require 'ccls)
 
 (provide 'init)
 ;;; init.el ends here
