@@ -50,7 +50,7 @@
 (when window-system
   (scroll-bar-mode t)
   ;; (set-frame-size (selected-frame) 80 60)
-  (set-frame-parameter (selected-frame) 'alpha 90)
+  (set-frame-parameter (selected-frame) 'alpha 95)
   (set-frame-parameter (selected-frame) 'ns-transparent-titlebar t)
   (set-frame-parameter (selected-frame) 'ns-appearance 'dark)
   (set-frame-parameter (selected-frame) 'undecorated t)
@@ -246,5 +246,20 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'ccls)
 (require 'ccls)
 
+
+;; go
+(straight-use-package 'go-eldoc)
+(straight-use-package 'go-guru)
+(straight-use-package 'go-mode)
+(straight-use-package 'go-rename)
+
+(require 'go-eldoc)
+(require 'go-guru)
+(require 'go-mode)
+(define-key go-mode-map (kbd "M-.") #'go-guru-definition)
+(add-hook 'go-mode-hook #'go-eldoc-setup)
+
+
+;; end of file
 (provide 'init)
 ;;; init.el ends here
