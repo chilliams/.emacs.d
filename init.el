@@ -65,15 +65,18 @@
 (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
 (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
 
-(straight-use-package 'helm-ag)
-(setq helm-ag-base-command "rg --vimgrep --no-heading --max-columns 1000 ")
-
 (straight-use-package 'projectile)
 (projectile-mode +1)
+(setq projectile-enable-caching t)
+(setq projectile-use-git-grep t)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 (straight-use-package 'helm-projectile)
 (helm-projectile-on)
+
+(straight-use-package 'helm-rg)
+(define-key projectile-mode-map (kbd "M-m /") #'helm-rg)
+
 
 (straight-use-package 'magit)
 
