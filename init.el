@@ -57,6 +57,9 @@
   (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
   )
 
+(straight-use-package 'undo-tree)
+(global-undo-tree-mode 1)
+
 (straight-use-package 'helm)
 (helm-mode 1)
 (global-set-key (kbd "M-x") #'helm-M-x)
