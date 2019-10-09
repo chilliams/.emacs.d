@@ -24,6 +24,7 @@
 (setq async-shell-command-buffer 'confirm-kill-process)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq column-number-mode t)
+(require 'comint)
 (setq comint-input-ignoredups t)
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq custom-file "~/.emacs-custom.el")
@@ -45,11 +46,8 @@
 (put 'evil-ex-history 'history-length 50)
 (put 'kill-ring 'history-length 25)
 
-
 ;; gui tweaks
 (when window-system
-  (scroll-bar-mode t)
-  ;; (set-frame-size (selected-frame) 80 60)
   (set-frame-parameter (selected-frame) 'alpha 95)
   (set-frame-parameter (selected-frame) 'ns-transparent-titlebar t)
   (set-frame-parameter (selected-frame) 'ns-appearance 'dark)
@@ -57,8 +55,21 @@
   (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
   )
 
+
+(defun setup-prog-mode ()
+  "Set desired `prog-mode' locals."
+  (setq require-final-newline 'ask)
+  (setq show-trailing-whitespace t))
+
+(add-hook 'prog-mode-hook #'setup-prog-mode)
+
+
+(straight-use-package 'ws-butler)
+(require 'ws-butler)
+(ws-butler-global-mode)
+
 (straight-use-package 'undo-tree)
-(global-undo-tree-mode 1)
+(global-undo-tree-mode)
 
 (straight-use-package 'helm)
 (helm-mode 1)
@@ -67,6 +78,7 @@
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
 (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+(define-key shell-mode-map (kbd "M-r") #'helm-comint-input-ring)
 
 (straight-use-package 'projectile)
 (projectile-mode +1)
@@ -229,7 +241,7 @@ a shell (with its need to quote arguments)."
 
 ;; syntax checking
 (straight-use-package 'flycheck)
-;; (global-flycheck-mode)
+(global-flycheck-mode)
 
 ;; (straight-use-package 'flycheck-pkg-config)
 
@@ -263,8 +275,27 @@ a shell (with its need to quote arguments)."
 (require 'go-guru)
 (require 'go-mode)
 (define-key go-mode-map (kbd "M-.") #'go-guru-definition)
-(add-hook 'go-mode-hook #'go-eldoc-setup)
+(add-hook 'before-save-hook 'gofmt-before-save)
 
+(straight-use-package 'ggtags)
+(straight-use-package 'helm-gtags)
+
+(require 'ggtags)
+(require 'helm-gtags)
+(define-key ggtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key ggtags-mode-map (kbd "C-x 4 .") 'helm-gtags-find-tag-other-window)
+(define-key ggtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key ggtags-mode-map (kbd "M-*") 'helm-gtags-pop-stack)
+
+(defun ggtags-mode-enable ()
+  "Enable ggtags and eldoc mode."
+  (ggtags-mode 1)
+  (eldoc-mode 1))
+
+(add-hook 'java-mode-hook #'ggtags-mode-enable)
+(add-hook 'java-mode-hook (lambda () (setq c-basic-offset 4)))
+
+(straight-use-package 'protobuf-mode)
 
 ;; end of file
 (provide 'init)
