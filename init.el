@@ -78,6 +78,8 @@
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
 (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+
+(require 'shell)
 (define-key shell-mode-map (kbd "M-r") #'helm-comint-input-ring)
 
 (straight-use-package 'projectile)
@@ -293,9 +295,15 @@ a shell (with its need to quote arguments)."
   (eldoc-mode 1))
 
 (add-hook 'java-mode-hook #'ggtags-mode-enable)
-(add-hook 'java-mode-hook (lambda () (setq c-basic-offset 4)))
 
 (straight-use-package 'protobuf-mode)
+
+(load-file "~/.emacs.d/google-c-style.el")
+(require 'google-c-style)
+(add-hook 'java-mode-hook (lambda ()
+			    (google-set-c-style)
+			    (setq c-basic-offset 4)))
+
 
 ;; end of file
 (provide 'init)
