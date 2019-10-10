@@ -74,6 +74,7 @@
 (straight-use-package 'helm)
 (helm-mode 1)
 (global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-c y") #'helm-show-kill-ring)
 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
@@ -304,6 +305,11 @@ a shell (with its need to quote arguments)."
 			    (google-set-c-style)
 			    (setq c-basic-offset 4)))
 
+(defun eslint-fix-file ()
+  "Format js file with eslint."
+  (interactive)
+  (message "eslint --fixing the file" (buffer-file-name))
+  (shell-command (concat "eslint --fix " (buffer-file-name))))
 
 ;; end of file
 (provide 'init)
