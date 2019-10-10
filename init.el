@@ -48,6 +48,8 @@
 
 ;; gui tweaks
 (when window-system
+  (scroll-bar-mode 1)
+  (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 95)
   (set-frame-parameter (selected-frame) 'ns-transparent-titlebar t)
   (set-frame-parameter (selected-frame) 'ns-appearance 'dark)
@@ -92,9 +94,8 @@
 (straight-use-package 'helm-projectile)
 (helm-projectile-on)
 
-(straight-use-package 'helm-rg)
-(define-key projectile-mode-map (kbd "M-m /") #'helm-rg)
-
+(straight-use-package 'helm-ag)
+(define-key projectile-mode-map (kbd "M-m /") #'helm-projectile-ag)
 
 (straight-use-package 'magit)
 
