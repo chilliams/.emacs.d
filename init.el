@@ -6,6 +6,9 @@
 
 ;;; Code:
 
+(load "~/.emacs.d/config")
+(global-hl-line-mode -1)
+
 ;; bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -300,7 +303,7 @@ a shell (with its need to quote arguments)."
 
 (straight-use-package 'protobuf-mode)
 
-(load-file "~/.emacs.d/google-c-style.el")
+(load "~/.emacs.d/google-c-style")
 (require 'google-c-style)
 (add-hook 'java-mode-hook (lambda ()
 			    (google-set-c-style)
