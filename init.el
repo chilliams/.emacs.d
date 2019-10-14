@@ -34,7 +34,7 @@
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
-(set-frame-font "Monaco-14")
+(set-frame-font "Monaco-15")
 (show-paren-mode 1)
 
 ;; backups
@@ -79,11 +79,12 @@
 (straight-use-package 'helm)
 (helm-mode 1)
 (global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-c y") #'helm-show-kill-ring)
 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
 (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+(global-set-key (kbd "C-c y") #'helm-show-kill-ring)
+(global-set-key (kbd "C-c j") #'helm-semantic-or-imenu)
 
 (require 'shell)
 (define-key shell-mode-map (kbd "M-r") #'helm-comint-input-ring)
@@ -314,6 +315,10 @@ a shell (with its need to quote arguments)."
   (interactive)
   (message "eslint --fixing the file" (buffer-file-name))
   (shell-command (concat "eslint --fix " (buffer-file-name))))
+
+(straight-use-package 'rjsx-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
 
 ;; end of file
 (provide 'init)
