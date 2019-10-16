@@ -34,7 +34,7 @@
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
-(set-frame-font "Monaco-15")
+(set-frame-font "Hack-15")
 (show-paren-mode 1)
 
 ;; backups
@@ -107,13 +107,13 @@
 (which-key-mode)
 
 (straight-use-package 'mwim)
-(global-set-key (kbd "C-a") 'mwim-beginning)
-(global-set-key (kbd "C-e") 'mwim-end)
+(global-set-key (kbd "C-a") #'mwim-beginning)
+(global-set-key (kbd "C-e") #'mwim-end)
 
 ;; global keybinds
-(global-set-key (kbd "C-`") 'other-frame)
+(global-set-key (kbd "C-`") #'other-frame)
 (require 'dired)
-(global-set-key (kbd "C-x C-j") 'dired-jump)
+(global-set-key (kbd "C-x C-j") #'dired-jump)
 (global-set-key (kbd "C-c o") (lambda ()
 				(interactive)
 				(other-window -1)))
@@ -123,6 +123,7 @@
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.job\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.pmf\\'" . conf-colon-mode))
+(add-to-list 'auto-mode-alist '("BUILD" . python-mode))
 
 
 ;; documentation modes
@@ -319,6 +320,24 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
+(defun jump-to-test-dir ()
+  "Jump to the test version of the current directory."
+  (interactive)
+  (dired (replace-regexp-in-string "/src/" "/test/" default-directory)))
+
+(defun jump-to-src-dir ()
+  "Jump to the src version of the current directory."
+  (interactive)
+  (dired (replace-regexp-in-string "/test/" "/src/" default-directory)))
+
+(defun toggle-src-test-dir ()
+  "Jump between src and test dirs."
+  (interactive)
+  (cond ((string-match "/src/" default-directory) (jump-to-test-dir))
+        ((string-match "/test/" default-directory) (jump-to-src-dir))
+        (t (print "Not in src or test directory"))))
+
+(global-set-key (kbd "C-c t") #'toggle-src-test-dir)
 
 ;; end of file
 (provide 'init)
