@@ -339,6 +339,9 @@ a shell (with its need to quote arguments)."
 
 (global-set-key (kbd "C-c t") #'toggle-src-test-dir)
 
+(straight-use-package 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
+
 ;; end of file
 (provide 'init)
 ;;; init.el ends here
