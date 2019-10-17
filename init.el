@@ -34,7 +34,7 @@
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
-(set-frame-font "Hack-15")
+(set-frame-font "Hack-14")
 (show-paren-mode 1)
 
 ;; backups
@@ -48,17 +48,6 @@
 (put 'minibuffer-history 'history-length 50)
 (put 'evil-ex-history 'history-length 50)
 (put 'kill-ring 'history-length 25)
-
-;; gui tweaks
-(when window-system
-  (scroll-bar-mode 1)
-  (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 95)
-  (set-frame-parameter (selected-frame) 'ns-transparent-titlebar t)
-  (set-frame-parameter (selected-frame) 'ns-appearance 'dark)
-  (set-frame-parameter (selected-frame) 'undecorated t)
-  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-  )
 
 
 (defun setup-prog-mode ()
