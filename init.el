@@ -331,6 +331,11 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
 
+(straight-use-package 'helm-swoop)
+(global-set-key (kbd "C-c s") #'helm-swoop)
+
+(server-start)
+
 ;; end of file
 (provide 'init)
 ;;; init.el ends here
