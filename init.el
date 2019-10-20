@@ -255,12 +255,29 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'direnv)
 (direnv-mode)
 
-(straight-use-package 'lsp-mode)
-(setq lsp-enable-snippet nil)
-(add-hook 'c-mode-hook #'lsp)
+(straight-use-package 'company)
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
 
-(straight-use-package 'ccls)
-(require 'ccls)
+(straight-use-package 'meghanada)
+(require 'meghanada)
+(add-hook 'java-mode-hook
+          (lambda ()
+            ;; meghanada-mode on
+            (meghanada-mode t)
+            ;; enable telemetry
+            (meghanada-telemetry-enable t)
+            (flycheck-mode +1)
+            (setq c-basic-offset 2)
+            ;; use code format
+            (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
+(cond
+ ((eq system-type 'windows-nt)
+  (setq meghanada-java-path (expand-file-name "bin/java.exe" (getenv "JAVA_HOME")))
+  (setq meghanada-maven-path "mvn.cmd"))
+ (t
+  (setq meghanada-java-path "java")
+  (setq meghanada-maven-path "mvn")))
 
 
 ;; go
@@ -290,7 +307,7 @@ a shell (with its need to quote arguments)."
   (ggtags-mode 1)
   (eldoc-mode 1))
 
-(add-hook 'java-mode-hook #'ggtags-mode-enable)
+;; (add-hook 'java-mode-hook #'ggtags-mode-enable)
 
 (straight-use-package 'protobuf-mode)
 
