@@ -259,26 +259,15 @@ a shell (with its need to quote arguments)."
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
-(straight-use-package 'meghanada)
-(require 'meghanada)
-(add-hook 'java-mode-hook
-          (lambda ()
-            ;; meghanada-mode on
-            (meghanada-mode t)
-            ;; enable telemetry
-            (meghanada-telemetry-enable t)
-            (flycheck-mode +1)
-            (setq c-basic-offset 2)
-            ;; use code format
-            (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
-(cond
- ((eq system-type 'windows-nt)
-  (setq meghanada-java-path (expand-file-name "bin/java.exe" (getenv "JAVA_HOME")))
-  (setq meghanada-maven-path "mvn.cmd"))
- (t
-  (setq meghanada-java-path "java")
-  (setq meghanada-maven-path "mvn")))
+(straight-use-package 'lsp-mode)
+(setq lsp-enable-snippet nil)
 
+(straight-use-package 'company-lsp)
+(push 'company-lsp company-backends)
+
+(straight-use-package 'lsp-java)
+(require 'lsp-java)
+(add-hook 'java-mode-hook #'lsp)
 
 ;; go
 (straight-use-package 'go-eldoc)
