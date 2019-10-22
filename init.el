@@ -218,36 +218,16 @@ a shell (with its need to quote arguments)."
   (apply-function-to-region 'url-hexify-string))
 
 
-;; go
-(defun go-run-tests (args)
-  (save-selected-window
-    (async-shell-command (concat "go test -v " args))))
+;; camel case
+(add-hook 'c-mode-common-hook #'subword-mode)
 
-(defun go-run-package-tests ()
-  (interactive)
-  (go-run-tests ""))
-
-(defun go-run-package-tests-nested ()
-  (interactive)
-  (go-run-tests "./..."))
-
-(defun go-run-main ()
-  (interactive)
-  (save-selected-window
-    (async-shell-command
-     (format "go run %s"
-             (shell-quote-argument (buffer-file-name))))))
-
-
-;; for java
-(add-hook 'c-mode-common-hook (lambda ()
-				(subword-mode)))
 
 ;; syntax checking
 (straight-use-package 'flycheck)
 (global-flycheck-mode)
 
 ;; (straight-use-package 'flycheck-pkg-config)
+
 
 ;; nix
 (straight-use-package 'nix-mode)
@@ -261,9 +241,17 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'direnv)
 (direnv-mode)
 
+
+;; autocomplete
 (straight-use-package 'company)
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+
+;; suggestions from company-go
+(setq company-tooltip-limit 20)                      ; bigger popup window
+(setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+(setq company-echo-delay 0)                          ; remove annoying blinking
+(setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
 
 (straight-use-package 'lsp-mode)
 (setq lsp-enable-snippet nil)
@@ -305,6 +293,25 @@ a shell (with its need to quote arguments)."
 
 
 ;; go
+(defun go-run-tests (args)
+  (save-selected-window
+    (async-shell-command (concat "go test -v " args))))
+
+(defun go-run-package-tests ()
+  (interactive)
+  (go-run-tests ""))
+
+(defun go-run-package-tests-nested ()
+  (interactive)
+  (go-run-tests "./..."))
+
+(defun go-run-main ()
+  (interactive)
+  (save-selected-window
+    (async-shell-command
+     (format "go run %s"
+             (shell-quote-argument (buffer-file-name))))))
+
 (straight-use-package 'go-eldoc)
 (straight-use-package 'go-guru)
 (straight-use-package 'go-mode)
@@ -315,6 +322,13 @@ a shell (with its need to quote arguments)."
 (require 'go-mode)
 (define-key go-mode-map (kbd "M-.") #'go-guru-definition)
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+(straight-use-package 'company-go)
+(require 'company-go)
+(setq company-go-show-annotation t)
+(add-hook 'go-mode-hook
+          (lambda ()
+            (set (make-local-variable 'company-backends) '(company-go))))
 
 
 ;; protobuf
