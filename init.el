@@ -6,6 +6,9 @@
 
 ;;; Code:
 
+(set-foreground-color "grey80")
+(set-background-color "grey10")
+
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
 
@@ -34,7 +37,7 @@
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
-(set-frame-font "Hack-14")
+(set-frame-font "Hack-15")
 (show-paren-mode 1)
 
 ;; backups
