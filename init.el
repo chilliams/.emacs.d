@@ -6,8 +6,11 @@
 
 ;;; Code:
 
-(set-foreground-color "grey80")
+(set-foreground-color "grey90")
 (set-background-color "grey10")
+
+(when window-system
+  (set-frame-parameter (selected-frame) 'alpha 90))
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
@@ -268,21 +271,10 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'company-lsp)
 (push 'company-lsp company-backends)
 
+
+;; java
 (straight-use-package 'lsp-java)
 (require 'lsp-java)
-(add-hook 'java-mode-hook #'lsp)
-
-;; go
-(straight-use-package 'go-eldoc)
-(straight-use-package 'go-guru)
-(straight-use-package 'go-mode)
-(straight-use-package 'go-rename)
-
-(require 'go-eldoc)
-(require 'go-guru)
-(require 'go-mode)
-(define-key go-mode-map (kbd "M-.") #'go-guru-definition)
-(add-hook 'before-save-hook 'gofmt-before-save)
 
 (straight-use-package 'ggtags)
 (straight-use-package 'helm-gtags)
@@ -299,16 +291,37 @@ a shell (with its need to quote arguments)."
   (ggtags-mode 1)
   (eldoc-mode 1))
 
-;; (add-hook 'java-mode-hook #'ggtags-mode-enable)
-
-(straight-use-package 'protobuf-mode)
+;; (add-hook 'java-mode-hook #'lsp)
+(add-hook 'java-mode-hook #'ggtags-mode-enable)
 
 (load "~/.emacs.d/google-c-style")
 (require 'google-c-style)
-(add-hook 'java-mode-hook (lambda ()
-			    (google-set-c-style)
-			    (setq c-basic-offset 4)))
+(defun setup-java-style ()
+  "Set Google style but with 4 space tabs."
+  (google-set-c-style)
+  (setq c-basic-offset 4))
 
+(add-hook 'java-mode-hook #'setup-java-style)
+
+
+;; go
+(straight-use-package 'go-eldoc)
+(straight-use-package 'go-guru)
+(straight-use-package 'go-mode)
+(straight-use-package 'go-rename)
+
+(require 'go-eldoc)
+(require 'go-guru)
+(require 'go-mode)
+(define-key go-mode-map (kbd "M-.") #'go-guru-definition)
+(add-hook 'before-save-hook 'gofmt-before-save)
+
+
+;; protobuf
+(straight-use-package 'protobuf-mode)
+
+
+;; js
 (defun eslint-fix-file ()
   "Format js file with eslint."
   (interactive)
@@ -318,6 +331,8 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
+
+;; other
 (defun jump-to-test-dir ()
   "Jump to the test version of the current directory."
   (interactive)
