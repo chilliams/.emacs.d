@@ -10,6 +10,7 @@
 (set-background-color "grey10")
 
 (when window-system
+  (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 90))
 
 (load "~/.emacs.d/config")
@@ -40,7 +41,6 @@
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
-(set-frame-font "Hack-15")
 (show-paren-mode 1)
 
 ;; backups
@@ -152,6 +152,7 @@
 (add-hook 'shell-mode-hook 'my-shell-mode-hook)
 
 (setenv "EDITOR" "emacsclient")
+(setenv "PAGER" "head -n 1000")
 
 (defun async-shell-command (command &optional output-buffer error-buffer)
   "Execute string COMMAND asynchronously in background.
