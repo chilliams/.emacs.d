@@ -11,7 +11,8 @@
 
 (when window-system
   (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 90))
+  (set-frame-parameter (selected-frame) 'alpha 90)
+  (set-frame-font "DejaVu Sans Mono-14"))
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
@@ -120,6 +121,7 @@
 (add-to-list 'auto-mode-alist '("\\.pmf\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.bzl\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("BUILD" . python-mode))
+(add-to-list 'auto-mode-alist '("WORKSPACE" . python-mode))
 
 
 ;; documentation modes
