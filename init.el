@@ -6,13 +6,16 @@
 
 ;;; Code:
 
+(let ((machine-specific-file "~/.emacs.d/pc.el"))
+  (when (file-exists-p machine-specific-file)
+    (load machine-specific-file)))
+
 (set-foreground-color "grey90")
 (set-background-color "grey10")
 
 (when window-system
   (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 90)
-  (set-frame-font "DejaVu Sans Mono-14"))
+  (set-frame-parameter (selected-frame) 'alpha 90))
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
@@ -20,7 +23,8 @@
 ;; bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el"
+                         user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
