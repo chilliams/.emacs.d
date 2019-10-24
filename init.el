@@ -15,7 +15,7 @@
 
 (when window-system
   (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 90))
+  (set-frame-parameter (selected-frame) 'alpha 95))
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
@@ -288,7 +288,7 @@ a shell (with its need to quote arguments)."
   (eldoc-mode 1))
 
 ;; (add-hook 'java-mode-hook #'lsp)
-(add-hook 'java-mode-hook #'ggtags-mode-enable)
+;; (add-hook 'java-mode-hook #'ggtags-mode-enable)
 
 (load "~/.emacs.d/google-c-style")
 (require 'google-c-style)
@@ -379,6 +379,10 @@ a shell (with its need to quote arguments)."
 
 (straight-use-package 'helm-swoop)
 (global-set-key (kbd "C-c s") #'helm-swoop)
+
+(let ((machine-specific-file "~/.emacs.d/pc.el"))
+  (when (file-exists-p machine-specific-file)
+    (load machine-specific-file)))
 
 (server-start)
 
