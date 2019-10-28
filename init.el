@@ -17,6 +17,12 @@
   (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 95))
 
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
 
