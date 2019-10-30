@@ -303,6 +303,7 @@ a shell (with its need to quote arguments)."
   (google-set-c-style)
   (setq c-basic-offset 4))
 
+(add-hook 'c-mode-common-hook #'google-set-c-style)
 (add-hook 'java-mode-hook #'setup-java-style)
 
 
