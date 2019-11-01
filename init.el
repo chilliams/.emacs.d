@@ -17,16 +17,17 @@
   (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 95))
 
+(load "~/.emacs.d/config")
+(global-hl-line-mode -1)
+
 ;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(load "~/.emacs.d/config")
-(global-hl-line-mode -1)
-
 ;; bootstrap straight.el
+(setq straight-repository-branch "develop")
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el"
@@ -54,18 +55,11 @@
 (setq mac-pass-command-to-system nil)
 (show-paren-mode 1)
 
-;; backups
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-
 ;; history
 (setq history-length 100)
 (put 'minibuffer-history 'history-length 50)
 (put 'evil-ex-history 'history-length 50)
 (put 'kill-ring 'history-length 25)
-
 
 (defun setup-prog-mode ()
   "Set desired `prog-mode' locals."
@@ -73,7 +67,6 @@
   (setq show-trailing-whitespace t))
 
 (add-hook 'prog-mode-hook #'setup-prog-mode)
-
 
 (straight-use-package 'ws-butler)
 (require 'ws-butler)
@@ -327,23 +320,24 @@ a shell (with its need to quote arguments)."
      (format "go run %s"
              (shell-quote-argument (buffer-file-name))))))
 
-(straight-use-package 'go-eldoc)
-(straight-use-package 'go-guru)
+;; (straight-use-package 'go-eldoc)
+;; (straight-use-package 'go-guru)
 (straight-use-package 'go-mode)
-(straight-use-package 'go-rename)
+;; (straight-use-package 'go-rename)
 
-(require 'go-eldoc)
-(require 'go-guru)
+;; (require 'go-eldoc)
+;; (require 'go-guru)
 (require 'go-mode)
-(define-key go-mode-map (kbd "M-.") #'go-guru-definition)
+;; (define-key go-mode-map (kbd "M-.") #'go-guru-definition)
 (add-hook 'before-save-hook 'gofmt-before-save)
 
-(straight-use-package 'company-go)
-(require 'company-go)
-(setq company-go-show-annotation t)
+;; (straight-use-package 'company-go)
+;; (require 'company-go)
+;; (setq company-go-show-annotation t)
 (add-hook 'go-mode-hook
           (lambda ()
-            (set (make-local-variable 'company-backends) '(company-go))))
+            (lsp)
+            (set (make-local-variable 'company-backends) '(company-lsp))))
 
 
 ;; protobuf
@@ -392,6 +386,24 @@ a shell (with its need to quote arguments)."
     (load machine-specific-file)))
 
 (server-start)
+
+(require 'lsp-go)
+
+(straight-use-package 'lsp-ui)
+(require 'lsp-ui)
+(lsp-ui-mode 1)
+
+(straight-use-package 'helm-lsp)
+(require 'helm-lsp)
+
+(straight-use-package 'dap-mode)
+(require 'dap-mode)
+(dap-mode 1)
+(dap-ui-mode 1)
+(dap-tooltip-mode 1)
+(tooltip-mode 1)
+
+(require 'dap-go)
 
 ;; end of file
 (provide 'init)
