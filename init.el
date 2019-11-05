@@ -10,15 +10,15 @@
   (when (file-exists-p machine-specific-file)
     (load machine-specific-file)))
 
-(set-foreground-color "grey90")
-(set-background-color "grey10")
-
 (when window-system
   (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 95))
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
+
+;; no lockfiles
+(setq create-lockfiles nil)
 
 ;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
