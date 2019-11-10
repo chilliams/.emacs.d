@@ -6,9 +6,7 @@
 
 ;;; Code:
 
-(let ((machine-specific-file "~/.emacs.d/pc.el"))
-  (when (file-exists-p machine-specific-file)
-    (load machine-specific-file)))
+(invert-face 'default)
 
 (when window-system
   (tool-bar-mode -1)
@@ -283,17 +281,16 @@ a shell (with its need to quote arguments)."
   (ggtags-mode 1)
   (eldoc-mode 1))
 
-;; (add-hook 'java-mode-hook #'lsp)
-;; (add-hook 'java-mode-hook #'ggtags-mode-enable)
-
 (load "~/.emacs.d/google-c-style")
 (require 'google-c-style)
-(defun setup-java-style ()
-  "Set Google style but with 4 space tabs."
+(defun setup-c-ish-modes ()
+  "Set up a bunch of settings for C/Java."
+
+  (semantic-mode 1)
   (google-set-c-style)
   (setq c-basic-offset 4))
 
-(add-hook 'c-mode-common-hook #'setup-java-style)
+(add-hook 'c-mode-common-hook #'setup-c-ish-modes)
 
 
 ;; go
@@ -377,10 +374,6 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'helm-swoop)
 (global-set-key (kbd "C-c s") #'helm-swoop)
 
-(let ((machine-specific-file "~/.emacs.d/pc.el"))
-  (when (file-exists-p machine-specific-file)
-    (load machine-specific-file)))
-
 (server-start)
 
 (require 'lsp-go)
@@ -388,6 +381,8 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'lsp-ui)
 (require 'lsp-ui)
 (lsp-ui-mode 1)
+(setq lsp-ui-doc-use-childframe nil)
+(setq lsp-ui-doc-use-webkit nil) ;; TODO: get this to work?
 
 (straight-use-package 'helm-lsp)
 (require 'helm-lsp)
@@ -412,6 +407,12 @@ a shell (with its need to quote arguments)."
 (add-hook 'cider-mode-hook #'setup-company-cider)
 (add-hook 'cider-repl-mode-hook #'setup-company-cider)
 
+(straight-use-package 'glsl-mode)
+
+
+(let ((machine-specific-file "~/.emacs.d/pc.el"))
+  (when (file-exists-p machine-specific-file)
+    (load machine-specific-file)))
 
 ;; end of file
 (provide 'init)
