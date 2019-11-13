@@ -59,12 +59,16 @@
 (put 'evil-ex-history 'history-length 50)
 (put 'kill-ring 'history-length 25)
 
-(defun setup-prog-mode ()
+(defun prog-mode-setup ()
   "Set desired `prog-mode' locals."
+  (flyspell-prog-mode)
   (setq require-final-newline 'ask)
   (setq show-trailing-whitespace t))
 
-(add-hook 'prog-mode-hook #'setup-prog-mode)
+(add-hook 'prog-mode-hook #'prog-mode-setup)
+
+;; spell checking
+(add-hook 'text-mode-hook #'flyspell-mode)
 
 (straight-use-package 'ws-butler)
 (require 'ws-butler)
@@ -99,6 +103,7 @@
 (define-key projectile-mode-map (kbd "M-m /") #'helm-projectile-ag)
 
 (straight-use-package 'magit)
+(require 'magit)
 
 (straight-use-package 'which-key)
 (which-key-mode)
