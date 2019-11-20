@@ -8,10 +8,6 @@
 
 (invert-face 'default)
 
-(when window-system
-  (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 95))
-
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
 
@@ -379,8 +375,6 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'helm-swoop)
 (global-set-key (kbd "C-c s") #'helm-swoop)
 
-(server-start)
-
 (require 'lsp-go)
 
 (straight-use-package 'lsp-ui)
@@ -403,10 +397,10 @@ a shell (with its need to quote arguments)."
 
 (straight-use-package 'clojure-mode)
 (straight-use-package 'cider)
-(require 'cider)
 
 (defun setup-company-cider ()
   "Make company use cider."
+  (require 'cider)
   (set (make-local-variable 'company-backends) '(company-capf)))
 
 (add-hook 'cider-mode-hook #'setup-company-cider)
@@ -414,10 +408,14 @@ a shell (with its need to quote arguments)."
 
 (straight-use-package 'glsl-mode)
 
-
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
     (load machine-specific-file)))
+
+(when window-system
+  (tool-bar-mode -1)
+  (set-frame-parameter (selected-frame) 'alpha 95)
+  (server-start))
 
 ;; end of file
 (provide 'init)
