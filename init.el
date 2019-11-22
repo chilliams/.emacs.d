@@ -122,8 +122,8 @@
 (add-to-list 'auto-mode-alist '("\\.job\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.pmf\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.bzl\\'" . python-mode))
-(add-to-list 'auto-mode-alist '("BUILD" . python-mode))
-(add-to-list 'auto-mode-alist '("WORKSPACE" . python-mode))
+(add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
+(add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
 
 
 ;; documentation modes
