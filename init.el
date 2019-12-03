@@ -6,7 +6,8 @@
 
 ;;; Code:
 
-(invert-face 'default)
+;; dark mode
+;; (invert-face 'default)
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
