@@ -394,10 +394,14 @@ a shell (with its need to quote arguments)."
 (dap-tooltip-mode 1)
 (tooltip-mode 1)
 
+(require 'dap-java)
 (require 'dap-go)
 
 (straight-use-package 'clojure-mode)
 (straight-use-package 'cider)
+(require 'cider)
+(setq cider-prompt-for-symbol t)
+(setq nrepl-log-messages t)
 
 (defun setup-company-cider ()
   "Make company use cider."
@@ -408,6 +412,24 @@ a shell (with its need to quote arguments)."
 (add-hook 'cider-repl-mode-hook #'setup-company-cider)
 
 (straight-use-package 'glsl-mode)
+
+(straight-use-package 'json-mode)
+(require 'json-mode)
+(add-to-list 'auto-mode-alist '("\\.g3dj\\'" . json-mode))
+
+(straight-use-package 'smartparens)
+(require 'smartparens-config)
+(add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+
+(straight-use-package 'clj-refactor)
+(require 'clj-refactor)
+(defun my-clojure-mode-hook ()
+    (clj-refactor-mode 1)
+    (yas-minor-mode 1) ; for adding require/use/import statements
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+    (cljr-add-keybindings-with-prefix "C-c r"))
+(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
