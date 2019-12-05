@@ -381,8 +381,6 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'lsp-ui)
 (require 'lsp-ui)
 (lsp-ui-mode 1)
-(setq lsp-ui-doc-use-childframe nil)
-(setq lsp-ui-doc-use-webkit nil) ;; TODO: get this to work?
 
 (straight-use-package 'helm-lsp)
 (require 'helm-lsp)
