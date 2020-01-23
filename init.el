@@ -97,6 +97,10 @@
 (helm-projectile-on)
 
 (straight-use-package 'helm-ag)
+;; ripgrep
+(setq helm-ag-base-command "rg-wrapper --vimgrep --no-heading --smart-case --max-columns 1000 ")
+(setq helm-ag-use-agignore t)
+(setq helm-ag-use-grep-ignore-list t)
 (define-key projectile-mode-map (kbd "M-m /") #'helm-projectile-ag)
 
 (straight-use-package 'magit)
@@ -250,7 +254,7 @@ a shell (with its need to quote arguments)."
 ;; autocomplete
 (straight-use-package 'company)
 (require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
 
 ;; suggestions from company-go
 (setq company-tooltip-limit 20)                      ; bigger popup window
