@@ -434,6 +434,9 @@ a shell (with its need to quote arguments)."
     (cljr-add-keybindings-with-prefix "C-c r"))
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
+(straight-use-package 'racket-mode)
+(add-hook 'racket-mode-hook #'smartparens-strict-mode)
+
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
     (load machine-specific-file)))
