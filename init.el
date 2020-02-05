@@ -7,7 +7,8 @@
 ;;; Code:
 
 ;; dark mode
-;; (invert-face 'default)
+(invert-face 'default)
+(set-background-color "grey15")
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
