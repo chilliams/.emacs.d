@@ -7,8 +7,6 @@
 ;;; Code:
 
 ;; dark mode
-(invert-face 'default)
-(set-background-color "grey15")
 
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
@@ -46,6 +44,7 @@
 (setq comint-input-ignoredups t)
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq custom-file "~/.emacs-custom.el")
+(setq dired-listing-switches "-alh")
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
@@ -132,6 +131,7 @@
 (add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
 
+(setq python-guess-indent nil)
 
 ;; documentation modes
 (add-hook 'markdown-mode-hook #'visual-line-mode)
