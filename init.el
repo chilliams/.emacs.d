@@ -6,8 +6,6 @@
 
 ;;; Code:
 
-;; dark mode
-
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
 
@@ -298,7 +296,7 @@ a shell (with its need to quote arguments)."
   (google-set-c-style)
   (setq c-basic-offset 4))
 
-(add-hook 'c-mode-common-hook #'setup-c-ish-modes)
+;; (add-hook 'c-mode-common-hook #'setup-c-ish-modes)
 
 
 ;; go
@@ -446,6 +444,17 @@ a shell (with its need to quote arguments)."
   (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 95)
   (server-start))
+
+(straight-use-package 'clang-format)
+
+(defun clang-format-for-filetype ()
+  "Run clang-format if the current file has a file extensions
+in the filetypes list."
+  (let ((filetypes '("c" "cpp")))
+    (when (member (file-name-extension (buffer-file-name)) filetypes)
+      (clang-format-buffer))))
+
+(add-hook 'before-save-hook 'clang-format-for-filetype)
 
 ;; end of file
 (provide 'init)
