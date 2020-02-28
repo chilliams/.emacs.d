@@ -46,6 +46,7 @@
 (setq mac-command-modifier 'control)
 (setq mac-option-modifier 'meta)
 (setq mac-pass-command-to-system nil)
+(savehist-mode 1)
 (show-paren-mode 1)
 
 ;; history
