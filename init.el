@@ -122,6 +122,7 @@
 
 
 ;; esoteric file types
+(add-to-list 'auto-mode-alist '("\\.i\\'" . text-mode))
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.job\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.pmf\\'" . conf-colon-mode))
@@ -267,6 +268,14 @@ a shell (with its need to quote arguments)."
 
 (straight-use-package 'company-lsp)
 (push 'company-lsp company-backends)
+
+
+;; c++
+(add-hook 'c-mode-hook #'lsp)
+(add-hook 'cc-mode-hook #'lsp)
+
+(straight-use-package 'ccls)
+(require 'ccls)
 
 
 ;; java
@@ -456,6 +465,28 @@ in the filetypes list."
       (clang-format-buffer))))
 
 (add-hook 'before-save-hook 'clang-format-for-filetype)
+
+(straight-use-package 'lua-mode)
+
+(defun sudo-edit (&optional arg)
+  (interactive "P")
+  (let ((fname (if (or arg (not buffer-file-name))
+                   (read-file-name "File: ")
+                 buffer-file-name)))
+    (find-file
+     (cond ((string-match-p "^/ssh:" fname)
+            (with-temp-buffer
+              (insert fname)
+              (search-backward ":")
+              (let ((last-match-end nil)
+                    (last-ssh-hostname nil))
+                (while (string-match "@\\\([^:|]+\\\)" fname last-match-end)
+                  (setq last-ssh-hostname (or (match-string 1 fname)
+                                              last-ssh-hostname))
+                  (setq last-match-end (match-end 0)))
+                (insert (format "|sudo:%s" (or last-ssh-hostname "localhost"))))
+              (buffer-string)))
+           (t (concat "/sudo:root@localhost:" fname))))))
 
 ;; end of file
 (provide 'init)
