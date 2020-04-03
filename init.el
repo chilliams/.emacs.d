@@ -86,6 +86,10 @@
 (require 'shell)
 (define-key shell-mode-map (kbd "M-r") #'helm-comint-input-ring)
 
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (define-key eshell-mode-map (kbd "M-r") #'helm-eshell-history)))
+
 (straight-use-package 'projectile)
 (projectile-mode +1)
 (setq projectile-enable-caching t)
@@ -154,6 +158,11 @@
   (setq css-indent-offset n) ; css-mode
   )
 (web-stuff-indent 2)
+
+(defun java-indent ()
+  (setq c-basic-offset 4)
+  (setq tab-width 4))
+(add-hook 'java-mode-hook #'java-indent)
 
 
 ;; shell stuff
