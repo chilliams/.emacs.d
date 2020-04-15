@@ -497,6 +497,14 @@ in the filetypes list."
               (buffer-string)))
            (t (concat "/sudo:root@localhost:" fname))))))
 
+(defun curl (url)
+  "Create tmp buffer with curl output"
+  (interactive "sURL: ")
+  (let ((buffer url))
+    (with-output-to-temp-buffer buffer
+      (shell-command (format "curl -s %s" url) buffer)
+      (pop-to-buffer buffer))))
+
 ;; end of file
 (provide 'init)
 ;;; init.el ends here
