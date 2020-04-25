@@ -505,6 +505,14 @@ in the filetypes list."
       (shell-command (format "curl -s %s" url) buffer)
       (pop-to-buffer buffer))))
 
+(straight-use-package 'csharp-mode)
+
+(defun indent-csharp ()
+  (setq c-basic-offset 4)
+  (setq tab-width 4))
+
+(add-hook 'csharp-mode-hook #'indent-csharp)
+
 ;; end of file
 (provide 'init)
 ;;; init.el ends here
