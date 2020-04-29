@@ -121,8 +121,8 @@
 (require 'dired)
 (global-set-key (kbd "C-x C-j") #'dired-jump)
 (global-set-key (kbd "C-c o") (lambda ()
-				(interactive)
-				(other-window -1)))
+                                (interactive)
+                                (other-window -1)))
 
 
 ;; esoteric file types
@@ -174,41 +174,16 @@
 (setenv "EDITOR" "emacsclient")
 (setenv "PAGER" "head -n 1000")
 
-(defun async-shell-command (command &optional output-buffer error-buffer)
-  "Execute string COMMAND asynchronously in background.
+(defun wrap-async-shell-command (args)
+  "Execute `async-shell-command' with a better buffer names"
+  (let ((command (nth 0 args))
+        (output-buffer (nth 1 args))
+        (error-buffer (nth 2 args)))
+    (list command
+          (or output-buffer (concat "*" command " in " default-directory "*"))
+          (or error-buffer (concat "* errors from " command " in " default-directory "*")))))
 
-Like `shell-command', but adds `&' at the end of COMMAND
-to execute it asynchronously.
-
-The output appears in the buffer `*Async Shell Command*'.
-That buffer is in shell mode.
-
-You can configure `async-shell-command-buffer' to specify what to do
-when the `*Async Shell Command*' buffer is already taken by another
-running shell command.  To run COMMAND without displaying the output
-in a window you can configure `display-buffer-alist' to use the action
-`display-buffer-no-window' for the buffer `*Async Shell Command*'.
-
-In Elisp, you will often be better served by calling `start-process'
-directly, since it offers more control and does not impose the use of
-a shell (with its need to quote arguments)."
-  (interactive
-   (list
-    (read-shell-command "Async shell command: " nil nil
-			(let ((filename
-			       (cond
-				(buffer-file-name)
-				((eq major-mode 'dired-mode)
-				 (dired-get-filename nil t)))))
-			  (and filename (file-relative-name filename))))
-    current-prefix-arg
-    shell-command-default-error-buffer))
-  (unless (string-match "&[ \t]*\\'" command)
-    (setq command (concat command " &")))
-  (shell-command command
-		 (or output-buffer (concat "*" command " in " default-directory "*"))
-		 error-buffer))
-
+(advice-add 'async-shell-command :filter-args #'wrap-async-shell-command)
 
 ;; useful functions
 (defun show-and-copy-buffer-filename ()
@@ -223,11 +198,11 @@ a shell (with its need to quote arguments)."
 (defun apply-function-to-region (fn)
   (save-excursion
     (let* ((beg (region-beginning))
-	   (end (region-end))
-	   (resulting-text
-	    (funcall
-	     fn
-	     (buffer-substring-no-properties beg end))))
+           (end (region-end))
+           (resulting-text
+            (funcall
+             fn
+             (buffer-substring-no-properties beg end))))
       (kill-region beg end)
       (insert resulting-text))))
 
@@ -446,10 +421,10 @@ a shell (with its need to quote arguments)."
 (straight-use-package 'clj-refactor)
 (require 'clj-refactor)
 (defun my-clojure-mode-hook ()
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ; for adding require/use/import statements
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-    (cljr-add-keybindings-with-prefix "C-c r"))
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1) ; for adding require/use/import statements
+  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (cljr-add-keybindings-with-prefix "C-c r"))
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
 (straight-use-package 'racket-mode)
