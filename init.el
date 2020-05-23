@@ -435,6 +435,7 @@
     (load machine-specific-file)))
 
 (when window-system
+  (menu-bar-mode -1)
   (tool-bar-mode -1)
   (set-frame-parameter (selected-frame) 'alpha 95)
   (server-start))
