@@ -265,6 +265,7 @@
 ;; java
 (straight-use-package 'lsp-java)
 (require 'lsp-java)
+;; (add-hook 'java-mode-hook #'lsp)
 
 (straight-use-package 'ggtags)
 (straight-use-package 'helm-gtags)
@@ -290,7 +291,7 @@
   (google-set-c-style)
   (setq c-basic-offset 4))
 
-;; (add-hook 'c-mode-common-hook #'setup-c-ish-modes)
+(add-hook 'c-mode-common-hook #'setup-c-ish-modes)
 
 
 ;; go
