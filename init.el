@@ -249,6 +249,7 @@
 
 (straight-use-package 'lsp-mode)
 (setq lsp-enable-snippet nil)
+(setq lsp-enable-file-watchers nil)
 
 (straight-use-package 'company-lsp)
 (push 'company-lsp company-backends)
