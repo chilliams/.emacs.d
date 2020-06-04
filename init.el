@@ -1,11 +1,3 @@
-;;; init.el --- My Emacs init file
-
-;;; Commentary:
-
-;; After years of using Spacemacs, I've decided to venture out on my own.
-
-;;; Code:
-
 (load "~/.emacs.d/config")
 (global-hl-line-mode -1)
 
@@ -159,12 +151,6 @@
   )
 (web-stuff-indent 2)
 
-(defun java-indent ()
-  (setq c-basic-offset 4)
-  (setq tab-width 4))
-(add-hook 'java-mode-hook #'java-indent)
-
-
 ;; shell stuff
 (defun my-shell-mode-hook ()
   (setq comint-input-ring-file-name "~/.bash_history")
@@ -289,8 +275,7 @@
   "Set up a bunch of settings for C/Java."
 
   (semantic-mode 1)
-  (google-set-c-style)
-  (setq c-basic-offset 4))
+  (google-set-c-style))
 
 (add-hook 'c-mode-common-hook #'setup-c-ish-modes)
 
@@ -432,10 +417,6 @@
 (straight-use-package 'racket-mode)
 (add-hook 'racket-mode-hook #'smartparens-strict-mode)
 
-(let ((machine-specific-file "~/.emacs.d/pc.el"))
-  (when (file-exists-p machine-specific-file)
-    (load machine-specific-file)))
-
 (when window-system
   (menu-bar-mode -1)
   (tool-bar-mode -1)
@@ -483,14 +464,6 @@ in the filetypes list."
       (shell-command (format "curl -s %s" url) buffer)
       (pop-to-buffer buffer))))
 
-(straight-use-package 'csharp-mode)
-
-(defun indent-csharp ()
-  (setq c-basic-offset 4)
-  (setq tab-width 4))
-
-(add-hook 'csharp-mode-hook #'indent-csharp)
-
-;; end of file
-(provide 'init)
-;;; init.el ends here
+(let ((machine-specific-file "~/.emacs.d/pc.el"))
+  (when (file-exists-p machine-specific-file)
+    (load machine-specific-file)))
