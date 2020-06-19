@@ -126,6 +126,8 @@
 (add-to-list 'auto-mode-alist '("\\.bazel\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.fs\\'". glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.vs\\'". glsl-mode))
 
 (setq python-guess-indent nil)
 
