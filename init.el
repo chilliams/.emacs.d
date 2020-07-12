@@ -387,14 +387,15 @@
 (require 'cider)
 (setq cider-prompt-for-symbol t)
 (setq nrepl-log-messages t)
+(setq cider-clojure-cli-global-options "-A:dev")
 
-(defun setup-company-cider ()
+(defun setup-cider ()
   "Make company use cider."
   (require 'cider)
   (set (make-local-variable 'company-backends) '(company-capf)))
 
-(add-hook 'cider-mode-hook #'setup-company-cider)
-(add-hook 'cider-repl-mode-hook #'setup-company-cider)
+(add-hook 'cider-mode-hook #'setup-cider)
+(add-hook 'cider-repl-mode-hook #'setup-cider)
 
 (straight-use-package 'glsl-mode)
 
