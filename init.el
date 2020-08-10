@@ -93,7 +93,7 @@
 
 (straight-use-package 'helm-ag)
 ;; ripgrep
-(setq helm-ag-base-command "rg-wrapper --vimgrep --no-heading --smart-case --max-columns 1000 ")
+(setq helm-ag-base-command "~/.emacs.d/bin/rg-wrapper --vimgrep --no-heading --smart-case --max-columns 1000 ")
 (setq helm-ag-use-agignore t)
 (setq helm-ag-use-grep-ignore-list t)
 (define-key projectile-mode-map (kbd "M-m /") #'helm-projectile-ag)
