@@ -154,13 +154,21 @@
 (web-stuff-indent 2)
 
 ;; shell stuff
+(straight-use-package
+ '(emacs-pager :type git
+               :host github
+               :repo "mbriggs/emacs-pager"))
+
+(add-to-list 'auto-mode-alist '("\\.emacs-pager$" . emacs-pager-mode))
+
 (defun my-shell-mode-hook ()
   (setq comint-input-ring-file-name "~/.bash_history")
   (comint-read-input-ring t))
 (add-hook 'shell-mode-hook 'my-shell-mode-hook)
 
 (setenv "EDITOR" "emacsclient")
-(setenv "PAGER" "head -n 1000")
+(setenv "PAGER" "~/.emacs.d/bin/emacs-pager")
+(setenv "GIT_PAGER" "~/.emacs.d/bin/emacs-pager")
 
 (defun wrap-async-shell-command (args)
   "Execute `async-shell-command' with a better buffer names"
