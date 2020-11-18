@@ -122,10 +122,10 @@
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.job\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.pmf\\'" . conf-colon-mode))
-(add-to-list 'auto-mode-alist '("\\.bzl\\'" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.bazel\\'" . python-mode))
-(add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
-(add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
+;; (add-to-list 'auto-mode-alist '("\\.bzl\\'" . python-mode))
+;; (add-to-list 'auto-mode-alist '("\\.bazel\\'" . python-mode))
+;; (add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
+;; (add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.fs\\'". glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.vs\\'". glsl-mode))
 
@@ -215,6 +215,15 @@
 (global-flycheck-mode)
 
 ;; (straight-use-package 'flycheck-pkg-config)
+
+
+;; bazel
+(straight-use-package
+ '(emacs-bazel-mode :type git
+                    :host github
+                    :repo "bazelbuild/emacs-bazel-mode"))
+(setq bazel-mode-buildifier-before-save t)
+(add-hook 'bazel-mode-hook #'flymake-mode)
 
 
 ;; nix
@@ -315,6 +324,18 @@
 (require 'go-mode)
 ;; (define-key go-mode-map (kbd "M-.") #'go-guru-definition)
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+(defun yext-java-format ()
+  (interactive)
+  (shell-command
+   (concat "$ALPHA/tools/java/javafmt/format-java-changes.sh " buffer-file-name))
+  (revert-buffer t t))
+
+(defun yext-java-format-after-save ()
+  (interactive)
+  (when (eq major-mode 'java-mode) (yext-java-format)))
+
+(add-hook 'after-save-hook 'yext-java-format-after-save)
 
 ;; (straight-use-package 'company-go)
 ;; (require 'company-go)
