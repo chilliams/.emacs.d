@@ -128,6 +128,7 @@
 ;; (add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.fs\\'". glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.vs\\'". glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.script\\'" . lua-mode))
 
 (setq python-guess-indent nil)
 
