@@ -492,6 +492,15 @@ in the filetypes list."
       (shell-command (format "curl -s %s" url) buffer)
       (pop-to-buffer buffer))))
 
+(defun pulse-line (&rest _)
+  "Pulse the current line."
+  (pulse-momentary-highlight-one-line (point)))
+
+(dolist (command '(scroll-up-command
+                   scroll-down-command
+                   recenter-top-bottom other-window))
+  (advice-add command :after #'pulse-line))
+
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
     (load machine-specific-file)))
