@@ -30,6 +30,7 @@
 (setq async-shell-command-buffer 'confirm-kill-process)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq column-number-mode t)
+(setq view-read-only t)
 (require 'comint)
 (setq comint-input-ignoredups t)
 (setq confirm-kill-emacs 'y-or-n-p)
