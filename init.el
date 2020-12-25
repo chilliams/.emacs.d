@@ -336,7 +336,9 @@
 
 (defun yext-java-format-after-save ()
   (interactive)
-  (when (eq major-mode 'java-mode) (yext-java-format)))
+  (when (and  (eq major-mode 'java-mode)
+              (getenv "ALPHA"))
+    (yext-java-format)))
 
 (add-hook 'after-save-hook 'yext-java-format-after-save)
 
@@ -506,3 +508,17 @@ in the filetypes list."
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
     (load machine-specific-file)))
+
+(defun google ()
+  "Googles a query or region if any."
+  (interactive)
+  (browse-url
+   (concat
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+    (if mark-active
+        (buffer-substring (region-beginning) (region-end))
+      (read-string "Google: ")))))
+
+(global-set-key (kbd "C-c g") #'google)
+
+(global-company-mode)
