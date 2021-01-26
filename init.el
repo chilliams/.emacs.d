@@ -270,6 +270,11 @@
 (straight-use-package 'lsp-java)
 (require 'lsp-java)
 ;; (add-hook 'java-mode-hook #'lsp)
+(add-hook
+ 'java-mode-hook
+ (lambda ()
+   (setq-local c-basic-offset 4)
+   (setq-local tab-width 4)))
 
 (straight-use-package 'ggtags)
 (straight-use-package 'helm-gtags)
@@ -504,6 +509,24 @@ in the filetypes list."
                    scroll-down-command
                    recenter-top-bottom other-window))
   (advice-add command :after #'pulse-line))
+
+(defun copy-gerrit-link ()
+  (interactive)
+  (let ((file-name (or (buffer-file-name) list-buffers-directory))
+        (alpha (getenv "ALPHA")))
+    (when (not file-name)
+      (error "Buffer not visiting a file"))
+    (when (not (string-prefix-p alpha file-name))
+      (error "File not in alpha"))
+    (let ((link
+           (replace-regexp-in-string
+            (regexp-quote alpha)
+            "https://gerrit.yext.com/plugins/gitiles/alpha/+/refs/heads/master/"
+            file-name
+            nil
+            'literal))
+          (line (number-to-string (line-number-at-pos))))
+      (message (kill-new (concat link "#" line))))))
 
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
