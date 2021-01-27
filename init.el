@@ -391,6 +391,16 @@
 
 (global-set-key (kbd "C-c t") #'toggle-src-test-dir)
 
+(defun jump-to-jsx ()
+  "Jump to jsx source from transpiled js"
+  (interactive)
+  (let ((file (replace-regexp-in-string "bazel-out/darwin-fastbuild/bin/"
+                                        ""
+                                        (buffer-file-name))))
+    (find-file (replace-regexp-in-string "\\.js" ".jsx" file))))
+
+(global-set-key (kbd "C-c x") #'jump-to-jsx)
+
 (straight-use-package 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
 
