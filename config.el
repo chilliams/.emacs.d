@@ -25,8 +25,8 @@
 (setq dired-dwim-target t)
 
 ;; no beep pleeeeeease ! (and no visual blinking too please)
-(setq ring-bell-function 'ignore
-      visible-bell nil)
+;; (setq ring-bell-function 'ignore
+;;       visible-bell nil)
 
 ;; Mouse cursor in terminal mode
 (xterm-mouse-mode 1)
