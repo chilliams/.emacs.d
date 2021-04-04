@@ -555,3 +555,5 @@ in the filetypes list."
 (global-set-key (kbd "C-c g") #'google)
 
 (global-company-mode)
+
+(setq nrepl-sync-request-timeout 30)
