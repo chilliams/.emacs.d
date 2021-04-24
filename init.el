@@ -227,7 +227,6 @@
                     :repo "bazelbuild/emacs-bazel-mode"))
 (setq bazel-mode-buildifier-before-save t)
 (add-hook 'bazel-mode-hook #'flymake-mode)
-(require 'bazel-build)
 
 ;; nix
 (straight-use-package 'nix-mode)
