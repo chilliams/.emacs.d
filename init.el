@@ -11,12 +11,12 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; bootstrap straight.el
-(setq straight-repository-branch "develop")
+
+;;;; straight.el
+;; bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el"
-                         user-emacs-directory))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -26,6 +26,12 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+;; configure
+(require 'straight)
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
 
 ;; basic emacs tweaks
 (setq async-shell-command-buffer 'confirm-kill-process)
@@ -249,56 +255,36 @@
 (setq company-echo-delay 0)                          ; remove annoying blinking
 (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
 
-(straight-use-package 'lsp-mode)
-(setq lsp-enable-snippet nil)
-(setq lsp-enable-file-watchers nil)
 
-(straight-use-package 'company-lsp)
-(push 'company-lsp company-backends)
-
-
-;; c++
-(add-hook 'c-mode-hook #'lsp)
-(add-hook 'cc-mode-hook #'lsp)
-
-(straight-use-package 'ccls)
-(require 'ccls)
+;;;; lsp
+(use-package lsp-mode
+  :commands lsp-install-server
+  :init
+  ;; Disable features that have great potential to be slow.
+  (setq lsp-enable-folding nil
+        lsp-enable-text-document-color nil)
+  ;; Reduce unexpected modifications to code
+  (setq lsp-enable-on-type-formatting nil)
+  ;; Make breadcrumbs opt-in; they're redundant with the modeline and imenu
+  (setq lsp-headerline-breadcrumb-enable nil))
 
 
-;; java
-(straight-use-package 'lsp-java)
-(require 'lsp-java)
-;; (add-hook 'java-mode-hook #'lsp)
-(add-hook
- 'java-mode-hook
- (lambda ()
-   (setq-local c-basic-offset 4)
-   (setq-local tab-width 4)))
-
-(straight-use-package 'ggtags)
-(straight-use-package 'helm-gtags)
-
-(require 'ggtags)
-(require 'helm-gtags)
-(define-key ggtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key ggtags-mode-map (kbd "C-x 4 .") 'helm-gtags-find-tag-other-window)
-(define-key ggtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-(define-key ggtags-mode-map (kbd "M-*") 'helm-gtags-pop-stack)
-
-(defun ggtags-mode-enable ()
-  "Enable ggtags and eldoc mode."
-  (ggtags-mode 1)
-  (eldoc-mode 1))
-
+;;;; formatting
 (load "~/.emacs.d/google-c-style")
 (require 'google-c-style)
 (defun setup-c-ish-modes ()
   "Set up a bunch of settings for C/Java."
-
   (semantic-mode 1)
   (google-set-c-style))
 
 (add-hook 'c-mode-common-hook #'setup-c-ish-modes)
+
+
+;;;; java
+(use-package lsp-java
+  :after lsp-mode
+  :preface
+  (add-hook 'java-mode-hook #'lsp-deferred))
 
 
 ;; go
