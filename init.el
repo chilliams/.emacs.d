@@ -33,7 +33,7 @@
 (setq straight-use-package-by-default t)
 
 
-;; basic emacs tweaks
+;;;; basic emacs tweaks
 (setq async-shell-command-buffer 'confirm-kill-process)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq column-number-mode t)
@@ -49,12 +49,6 @@
 (savehist-mode 1)
 (show-paren-mode 1)
 
-;; history
-(setq history-length 100)
-(put 'minibuffer-history 'history-length 50)
-(put 'evil-ex-history 'history-length 50)
-(put 'kill-ring 'history-length 25)
-
 (defun prog-mode-setup ()
   "Set desired `prog-mode' locals."
   (flyspell-prog-mode)
@@ -63,16 +57,57 @@
 
 (add-hook 'prog-mode-hook #'prog-mode-setup)
 
-;; spell checking
+(defun pulse-line (&rest _)
+  "Pulse the current line."
+  (pulse-momentary-highlight-one-line (point)))
+
+(dolist (command '(scroll-up-command
+                   scroll-down-command
+                   recenter-top-bottom other-window))
+  (advice-add command :after #'pulse-line))
+
+
+;;;; history
+(setq history-length 100)
+(put 'minibuffer-history 'history-length 50)
+(put 'evil-ex-history 'history-length 50)
+(put 'kill-ring 'history-length 25)
+
+
+;;;; spell checking
 (add-hook 'text-mode-hook #'flyspell-mode)
 
+
+;;;; whitespace
 (straight-use-package 'ws-butler)
 (require 'ws-butler)
 (ws-butler-global-mode)
 
+
+;;;; indentation
+(defun web-stuff-indent (n)
+  ;; java/c/c++/proto
+  (setq c-basic-offset n)
+  (setq tab-width n)
+  ;; web development
+  (setq coffee-tab-width n) ; coffeescript
+  (setq javascript-indent-level n) ; javascript-mode
+  (setq js-indent-level n) ; js-mode
+  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
+  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
+  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
+  (setq css-indent-offset n) ; css-mode
+  )
+(web-stuff-indent 2)
+
+
+;;;; undo tree
 (straight-use-package 'undo-tree)
 (global-undo-tree-mode)
 
+
+;;;; helm
 (straight-use-package 'helm)
 (helm-mode 1)
 (global-set-key (kbd "M-x") #'helm-M-x)
@@ -90,6 +125,8 @@
           (lambda ()
             (define-key eshell-mode-map (kbd "M-r") #'helm-eshell-history)))
 
+
+;;;; projectile
 (straight-use-package 'projectile)
 (projectile-mode +1)
 (setq projectile-enable-caching t)
@@ -99,24 +136,21 @@
 (straight-use-package 'helm-projectile)
 (helm-projectile-on)
 
+
+;;;; grep
 (straight-use-package 'helm-ag)
-;; ripgrep
 (setq helm-ag-base-command "~/.emacs.d/bin/rg-wrapper --vimgrep --no-heading --smart-case --max-columns 1000 ")
 (setq helm-ag-use-agignore t)
 (setq helm-ag-use-grep-ignore-list t)
 (define-key projectile-mode-map (kbd "M-m /") #'helm-projectile-ag)
 
+
+;;;; git
 (straight-use-package 'magit)
 (require 'magit)
 
-(straight-use-package 'which-key)
-(which-key-mode)
 
-(straight-use-package 'mwim)
-(global-set-key (kbd "C-a") #'mwim-beginning)
-(global-set-key (kbd "C-e") #'mwim-end)
-
-;; global keybinds
+;;; keys
 (global-set-key (kbd "C-`") #'other-frame)
 (require 'dired)
 (global-set-key (kbd "C-x C-j") #'dired-jump)
@@ -124,45 +158,31 @@
                                 (interactive)
                                 (other-window -1)))
 
+(straight-use-package 'mwim)
+(global-set-key (kbd "C-a") #'mwim-beginning)
+(global-set-key (kbd "C-e") #'mwim-end)
 
-;; esoteric file types
+(straight-use-package 'which-key)
+(which-key-mode)
+
+;;;; file types
 (add-to-list 'auto-mode-alist '("\\.i\\'" . text-mode))
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.job\\'" . conf-colon-mode))
 (add-to-list 'auto-mode-alist '("\\.pmf\\'" . conf-colon-mode))
-;; (add-to-list 'auto-mode-alist '("\\.bzl\\'" . python-mode))
-;; (add-to-list 'auto-mode-alist '("\\.bazel\\'" . python-mode))
-;; (add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
-;; (add-to-list 'auto-mode-alist '("WORKSPACE\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.fs\\'". glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.vs\\'". glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.script\\'" . lua-mode))
 
 (setq python-guess-indent nil)
 
-;; documentation modes
+
+;;;; documentation modes
 (add-hook 'markdown-mode-hook #'visual-line-mode)
 (add-hook 'org-mode-hook #'visual-line-mode)
 
 
-;; indentation
-(defun web-stuff-indent (n)
-  ;; java/c/c++/proto
-  (setq c-basic-offset n)
-  (setq tab-width n)
-  ;; web development
-  (setq coffee-tab-width n) ; coffeescript
-  (setq javascript-indent-level n) ; javascript-mode
-  (setq js-indent-level n) ; js-mode
-  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
-  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
-  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
-  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
-  (setq css-indent-offset n) ; css-mode
-  )
-(web-stuff-indent 2)
-
-;; shell stuff
+;;;; shell stuff
 (load "~/.emacs.d/emacs-pager")
 
 (defun my-shell-mode-hook ()
@@ -185,48 +205,17 @@
 
 (advice-add 'async-shell-command :filter-args #'wrap-async-shell-command)
 
-;; useful functions
-(defun show-and-copy-buffer-filename ()
-  "Show and copy the full path to the current file in the minibuffer."
-  (interactive)
-  ;; list-buffers-directory is the variable set in dired buffers
-  (let ((file-name (or (buffer-file-name) list-buffers-directory)))
-    (if file-name
-        (message (kill-new file-name))
-      (error "Buffer not visiting a file"))))
 
-(defun apply-function-to-region (fn)
-  (save-excursion
-    (let* ((beg (region-beginning))
-           (end (region-end))
-           (resulting-text
-            (funcall
-             fn
-             (buffer-substring-no-properties beg end))))
-      (kill-region beg end)
-      (insert resulting-text))))
-
-(defun url-unhex-region ()
-  (interactive)
-  (apply-function-to-region 'url-unhex-string))
-
-(defun url-hexify-region ()
-  (interactive)
-  (apply-function-to-region 'url-hexify-string))
-
-
-;; camel case
+;;;; camel case
 (add-hook 'c-mode-common-hook #'subword-mode)
 
 
-;; syntax checking
+;;;; syntax checking
 (straight-use-package 'flycheck)
 (global-flycheck-mode)
 
-;; (straight-use-package 'flycheck-pkg-config)
 
-
-;; bazel
+;;;; bazel
 (straight-use-package
  '(emacs-bazel-mode :type git
                     :host github
@@ -234,17 +223,8 @@
 (setq bazel-mode-buildifier-before-save t)
 (add-hook 'bazel-mode-hook #'flymake-mode)
 
-;; nix
-(straight-use-package 'nix-mode)
 
-(straight-use-package 'nix-sandbox)
-;; (setq flycheck-command-wrapper-function
-;;       (lambda (command) (apply 'nix-shell-command (nix-current-sandbox) command))
-;;       flycheck-executable-find
-;;       (lambda (cmd) (nix-executable-find (nix-current-sandbox) cmd)))
-
-
-;; autocomplete
+;;;; autocomplete
 (straight-use-package 'company)
 (require 'company)
 ;; (add-hook 'after-init-hook 'global-company-mode)
@@ -288,77 +268,6 @@
   :preface
   (add-hook 'java-mode-hook #'lsp-deferred))
 
-
-;; go
-(defun go-run-tests (args)
-  (save-selected-window
-    (async-shell-command (concat "go test -v " args))))
-
-(defun go-run-package-tests ()
-  (interactive)
-  (go-run-tests ""))
-
-(defun go-run-package-tests-nested ()
-  (interactive)
-  (go-run-tests "./..."))
-
-(defun go-run-main ()
-  (interactive)
-  (save-selected-window
-    (async-shell-command
-     (format "go run %s"
-             (shell-quote-argument (buffer-file-name))))))
-
-;; (straight-use-package 'go-eldoc)
-;; (straight-use-package 'go-guru)
-(straight-use-package 'go-mode)
-;; (straight-use-package 'go-rename)
-
-;; (require 'go-eldoc)
-;; (require 'go-guru)
-(require 'go-mode)
-;; (define-key go-mode-map (kbd "M-.") #'go-guru-definition)
-(add-hook 'before-save-hook 'gofmt-before-save)
-
-(defun yext-java-format ()
-  (interactive)
-  (shell-command
-   (concat "$ALPHA/tools/java/javafmt/format-java-changes.sh " buffer-file-name))
-  (revert-buffer t t))
-
-(defun yext-java-format-after-save ()
-  (interactive)
-  (when (and  (eq major-mode 'java-mode)
-              (getenv "ALPHA"))
-    (yext-java-format)))
-
-(add-hook 'after-save-hook 'yext-java-format-after-save)
-
-;; (straight-use-package 'company-go)
-;; (require 'company-go)
-;; (setq company-go-show-annotation t)
-(add-hook 'go-mode-hook
-          (lambda ()
-            (lsp)
-            (set (make-local-variable 'company-backends) '(company-lsp))))
-
-
-;; protobuf
-(straight-use-package 'protobuf-mode)
-
-
-;; js
-(defun eslint-fix-file ()
-  "Format js file with eslint."
-  (interactive)
-  (message "eslint --fixing the file" (buffer-file-name))
-  (shell-command (concat "eslint --fix " (buffer-file-name))))
-
-(straight-use-package 'rjsx-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
-
-
-;; other
 (defun jump-to-test-dir ()
   "Jump to the test version of the current directory."
   (interactive)
@@ -378,15 +287,49 @@
 
 (global-set-key (kbd "C-c t") #'toggle-src-test-dir)
 
-(defun jump-to-jsx ()
-  "Jump to jsx source from transpiled js"
-  (interactive)
-  (let ((file (replace-regexp-in-string "bazel-out/darwin-fastbuild/bin/"
-                                        ""
-                                        (buffer-file-name))))
-    (find-file (replace-regexp-in-string "\\.js" ".jsx" file))))
 
-(global-set-key (kbd "C-c x") #'jump-to-jsx)
+;;;; go
+(defun go-run-tests (args)
+  (save-selected-window
+    (async-shell-command (concat "go test -v " args))))
+
+(defun go-run-package-tests ()
+  (interactive)
+  (go-run-tests ""))
+
+(defun go-run-package-tests-nested ()
+  (interactive)
+  (go-run-tests "./..."))
+
+(defun go-run-main ()
+  (interactive)
+  (save-selected-window
+    (async-shell-command
+     (format "go run %s"
+             (shell-quote-argument (buffer-file-name))))))
+
+(straight-use-package 'go-mode)
+
+(require 'go-mode)
+(add-hook 'before-save-hook 'gofmt-before-save)
+
+
+;;;; protobuf
+(straight-use-package 'protobuf-mode)
+
+
+;;;; js
+(defun eslint-fix-file ()
+  "Format js file with eslint."
+  (interactive)
+  (message "eslint --fixing the file" (buffer-file-name))
+  (shell-command (concat "eslint --fix " (buffer-file-name))))
+
+(straight-use-package 'rjsx-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
+
+;;;; functions
 
 (straight-use-package 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
@@ -403,41 +346,16 @@
 (straight-use-package 'helm-lsp)
 (require 'helm-lsp)
 
-(straight-use-package 'dap-mode)
-(require 'dap-mode)
-(dap-mode 1)
-(dap-ui-mode 1)
-(dap-tooltip-mode 1)
-(tooltip-mode 1)
 
-(require 'dap-java)
-(require 'dap-go)
-
+;;;; clojure
 (straight-use-package 'clojure-mode)
+
 (straight-use-package 'cider)
 (require 'cider)
+(setq cider-clojure-cli-global-options "-A:dev")
 (setq cider-prompt-for-symbol t)
 (setq nrepl-log-messages t)
-(setq cider-clojure-cli-global-options "-A:dev")
-
-(defun setup-cider ()
-  "Make company use cider."
-  (require 'cider)
-  (set (make-local-variable 'company-backends) '(company-capf)))
-
-(add-hook 'cider-mode-hook #'setup-cider)
-(add-hook 'cider-repl-mode-hook #'setup-cider)
-
-(straight-use-package 'glsl-mode)
-
-(straight-use-package 'json-mode)
-(require 'json-mode)
-(add-to-list 'auto-mode-alist '("\\.g3dj\\'" . json-mode))
-
-(straight-use-package 'smartparens)
-(require 'smartparens-config)
-(add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
-(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+(setq nrepl-sync-request-timeout 30)
 
 (straight-use-package 'clj-refactor)
 (require 'clj-refactor)
@@ -448,18 +366,28 @@
   (cljr-add-keybindings-with-prefix "C-c r"))
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
+
+;;;; lisp
 (straight-use-package 'racket-mode)
+
+(straight-use-package 'smartparens)
+(require 'smartparens-config)
+(add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
 (add-hook 'racket-mode-hook #'smartparens-strict-mode)
 
-(when window-system
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 95)
-  (server-start))
 
+;;;; misc langs
+(straight-use-package 'glsl-mode)
+
+(straight-use-package 'json-mode)
+(require 'json-mode)
+(add-to-list 'auto-mode-alist '("\\.g3dj\\'" . json-mode))
 
 (straight-use-package 'lua-mode)
 
+
+;;;; functions
 (defun sudo-edit (&optional arg)
   (interactive "P")
   (let ((fname (if (or arg (not buffer-file-name))
@@ -488,14 +416,71 @@
       (shell-command (format "curl -s %s" url) buffer)
       (pop-to-buffer buffer))))
 
-(defun pulse-line (&rest _)
-  "Pulse the current line."
-  (pulse-momentary-highlight-one-line (point)))
+(defun google ()
+  "Googles a query or region if any."
+  (interactive)
+  (browse-url
+   (concat
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+    (if mark-active
+        (buffer-substring (region-beginning) (region-end))
+      (read-string "Google: ")))))
 
-(dolist (command '(scroll-up-command
-                   scroll-down-command
-                   recenter-top-bottom other-window))
-  (advice-add command :after #'pulse-line))
+(global-set-key (kbd "C-c g") #'google)
+
+(defun show-and-copy-buffer-filename ()
+  "Show and copy the full path to the current file in the minibuffer."
+  (interactive)
+  ;; list-buffers-directory is the variable set in dired buffers
+  (let ((file-name (or (buffer-file-name) list-buffers-directory)))
+    (if file-name
+        (message (kill-new file-name))
+      (error "Buffer not visiting a file"))))
+
+(defun apply-function-to-region (fn)
+  (save-excursion
+    (let* ((beg (region-beginning))
+           (end (region-end))
+           (resulting-text
+            (funcall
+             fn
+             (buffer-substring-no-properties beg end))))
+      (kill-region beg end)
+      (insert resulting-text))))
+
+(defun url-unhex-region ()
+  (interactive)
+  (apply-function-to-region 'url-unhex-string))
+
+(defun url-hexify-region ()
+  (interactive)
+  (apply-function-to-region 'url-hexify-string))
+
+
+;;;; work
+(defun yext-java-format ()
+  (interactive)
+  (shell-command
+   (concat "$ALPHA/tools/java/javafmt/format-java-changes.sh " buffer-file-name))
+  (revert-buffer t t))
+
+(defun yext-java-format-after-save ()
+  (interactive)
+  (when (and  (eq major-mode 'java-mode)
+              (getenv "ALPHA"))
+    (yext-java-format)))
+
+(add-hook 'after-save-hook 'yext-java-format-after-save)
+
+(defun jump-to-jsx ()
+  "Jump to jsx source from transpiled js"
+  (interactive)
+  (let ((file (replace-regexp-in-string "bazel-out/darwin-fastbuild/bin/"
+                                        ""
+                                        (buffer-file-name))))
+    (find-file (replace-regexp-in-string "\\.js" ".jsx" file))))
+
+(global-set-key (kbd "C-c x") #'jump-to-jsx)
 
 (defun copy-gerrit-link ()
   (interactive)
@@ -515,22 +500,14 @@
           (line (number-to-string (line-number-at-pos))))
       (message (kill-new (concat link "#" line))))))
 
+
+;;;; other
+(when window-system
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (set-frame-parameter (selected-frame) 'alpha 95)
+  (server-start))
+
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
   (when (file-exists-p machine-specific-file)
     (load machine-specific-file)))
-
-(defun google ()
-  "Googles a query or region if any."
-  (interactive)
-  (browse-url
-   (concat
-    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
-    (if mark-active
-        (buffer-substring (region-beginning) (region-end))
-      (read-string "Google: ")))))
-
-(global-set-key (kbd "C-c g") #'google)
-
-(global-company-mode)
-
-(setq nrepl-sync-request-timeout 30)
