@@ -266,7 +266,9 @@
   ;; Reduce unexpected modifications to code
   (setq lsp-enable-on-type-formatting nil)
   ;; Make breadcrumbs opt-in; they're redundant with the modeline and imenu
-  (setq lsp-headerline-breadcrumb-enable nil))
+  (setq lsp-headerline-breadcrumb-enable nil)
+  ;; Disable indentation because I don't like it
+  (setq lsp-enable-indentation nil))
 
 
 ;;;; formatting
