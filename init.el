@@ -225,15 +225,38 @@
 
 
 ;;;; autocomplete
-(straight-use-package 'company)
-(require 'company)
-;; (add-hook 'after-init-hook 'global-company-mode)
+(use-package company
+  :init
+  (setq company-minimum-prefix-length 2
+        company-tooltip-limit 14
+        company-tooltip-align-annotations t
+        company-require-match 'never
+        company-global-modes '(not erc-mode message-mode help-mode gud-mode)
+        company-frontends
+        '(company-pseudo-tooltip-frontend  ; always show candidates in overlay tooltip
+          company-echo-metadata-frontend)  ; show selected candidate docs in echo area
 
-;; suggestions from company-go
-(setq company-tooltip-limit 20)                      ; bigger popup window
-(setq company-idle-delay .1)                         ; decrease delay before autocompletion popup shows
-(setq company-echo-delay 0)                          ; remove annoying blinking
-(setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+        ;; Buffer-local backends will be computed when loading a major mode, so
+        ;; only specify a global default here.
+        company-backends '(company-capf)
+
+        ;; These auto-complete the current selection when
+        ;; `company-auto-complete-chars' is typed. This is too magical. We
+        ;; already have the much more explicit RET and TAB.
+        company-auto-complete nil
+        company-auto-complete-chars nil
+
+        ;; Only search the current buffer for `company-dabbrev' (a backend that
+        ;; suggests text your open buffers). This prevents Company from causing
+        ;; lag once you have a lot of buffers open.
+        company-dabbrev-other-buffers nil
+        ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+        ;; domain-specific words with particular casing.
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase nil)
+  :config
+  (company-tng-mode +1)
+  (global-company-mode))
 
 
 ;;;; lsp
