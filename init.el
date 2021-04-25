@@ -455,16 +455,6 @@
   (set-frame-parameter (selected-frame) 'alpha 95)
   (server-start))
 
-(straight-use-package 'clang-format)
-
-(defun clang-format-for-filetype ()
-  "Run clang-format if the current file has a file extensions
-in the filetypes list."
-  (let ((filetypes '("c" "cpp")))
-    (when (member (file-name-extension (buffer-file-name)) filetypes)
-      (clang-format-buffer))))
-
-(add-hook 'before-save-hook 'clang-format-for-filetype)
 
 (straight-use-package 'lua-mode)
 
