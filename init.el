@@ -107,42 +107,46 @@
 (global-undo-tree-mode)
 
 
-;;;; helm
-(straight-use-package 'helm)
-(helm-mode 1)
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
-(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
-(global-set-key (kbd "C-c y") #'helm-show-kill-ring)
-(global-set-key (kbd "C-c j") #'helm-semantic-or-imenu)
+;;;; ivy
+(use-package ivy
+  :config
+  ;; The default sorter is much to slow and the default for `ivy-sort-max-size'
+  ;; is way too big (30,000). Turn it down so big repos affect project
+  ;; navigation less.
+  (setq ivy-sort-max-size 7500)
+  (setq ivy-height 17
+        ivy-wrap t
+        ivy-fixed-height-minibuffer t
+        ivy-read-action-function #'ivy-hydra-read-action
+        ivy-read-action-format-function #'ivy-read-action-format-columns
+        projectile-completion-system 'ivy
+        ;; don't show recent files in switch-buffer
+        ivy-use-virtual-buffers nil
+        ;; ...but if that ever changes, show their full path
+        ivy-virtual-abbreviate 'full
+        ;; don't quit minibuffer on delete-error
+        ivy-on-del-error-function #'ignore
+        ;; enable ability to select prompt (alternative to `ivy-immediate-done')
+        ivy-use-selectable-prompt t)
+  (ivy-mode +1))
 
-(require 'shell)
-(define-key shell-mode-map (kbd "M-r") #'helm-comint-input-ring)
+(use-package counsel
+  :config
+  (require 'shell)
+  (define-key shell-mode-map (kbd "M-r") #'counsel-shell-history))
 
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (define-key eshell-mode-map (kbd "M-r") #'helm-eshell-history)))
+(use-package wgrep)
 
 
 ;;;; projectile
-(straight-use-package 'projectile)
-(projectile-mode +1)
-(setq projectile-enable-caching t)
-(setq projectile-use-git-grep t)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(use-package projectile
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") #'projectile-command-map)
+  (projectile-mode +1))
 
-(straight-use-package 'helm-projectile)
-(helm-projectile-on)
-
-
-;;;; grep
-(straight-use-package 'helm-ag)
-(setq helm-ag-base-command "~/.emacs.d/bin/rg-wrapper --vimgrep --no-heading --smart-case --max-columns 1000 ")
-(setq helm-ag-use-agignore t)
-(setq helm-ag-use-grep-ignore-list t)
-(define-key projectile-mode-map (kbd "M-m /") #'helm-projectile-ag)
+(use-package counsel-projectile
+  :config
+  (define-key projectile-mode-map (kbd "M-m /") #'counsel-projectile-git-grep))
 
 
 ;;;; git
@@ -350,24 +354,6 @@
 
 (straight-use-package 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
-
-
-;;;; functions
-
-(straight-use-package 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
-
-(straight-use-package 'helm-swoop)
-(global-set-key (kbd "C-c s") #'helm-swoop)
-
-(require 'lsp-go)
-
-(straight-use-package 'lsp-ui)
-(require 'lsp-ui)
-(lsp-ui-mode 1)
-
-(straight-use-package 'helm-lsp)
-(require 'helm-lsp)
 
 
 ;;;; clojure
