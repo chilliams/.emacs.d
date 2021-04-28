@@ -133,7 +133,8 @@
 (use-package counsel
   :config
   (require 'shell)
-  (define-key shell-mode-map (kbd "M-r") #'counsel-shell-history))
+  (define-key shell-mode-map (kbd "M-r") #'counsel-shell-history)
+  (counsel-mode +1))
 
 (use-package wgrep)
 
