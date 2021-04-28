@@ -127,7 +127,10 @@
         ;; don't quit minibuffer on delete-error
         ivy-on-del-error-function #'ignore
         ;; enable ability to select prompt (alternative to `ivy-immediate-done')
-        ivy-use-selectable-prompt t)
+        ivy-use-selectable-prompt t
+        ;; don't use ^ as initial input
+        ivy-initial-inputs-alist nil)
+
   (ivy-mode +1))
 
 (use-package counsel
