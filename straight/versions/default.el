@@ -25,6 +25,7 @@
  ("go-mode.el" . "49a538028e63dbe20f428c52d91f09b70b564626")
  ("ht.el" . "c4c1be487d6ecb353d07881526db05d7fc90ea87")
  ("hydra" . "2d553787aca1aceb3e6927e426200e9bb9f056f1")
+ ("ivy-rich" . "600b8183ed0be8668dcc548cc2c8cb94b001363b")
  ("js2-mode" . "b891edecedf30be6321e2f109fdfeb25b0edad27")
  ("json-mode" . "0e819e519ae17a2686e0881c4ca51fa873fa9b83")
  ("json-reformat" . "8eb6668ed447988aea06467ba8f42e1f2178246f")

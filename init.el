@@ -130,8 +130,13 @@
         ivy-use-selectable-prompt t
         ;; don't use ^ as initial input
         ivy-initial-inputs-alist nil)
-
   (ivy-mode +1))
+
+(use-package ivy-rich
+  :after (ivy counsel)
+  :config
+  (ivy-rich-mode +1)
+  (ivy-rich-project-root-cache-mode +1))
 
 (use-package counsel
   :config
