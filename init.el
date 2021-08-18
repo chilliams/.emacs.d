@@ -361,8 +361,8 @@
   (message "eslint --fixing the file" (buffer-file-name))
   (shell-command (concat "eslint --fix " (buffer-file-name))))
 
-(straight-use-package 'rjsx-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+;; (straight-use-package 'rjsx-mode)
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 
 ;;;; clojure
@@ -394,6 +394,9 @@
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
 (add-hook 'racket-mode-hook #'smartparens-strict-mode)
 
+(use-package sly
+  :config
+  (setq sly-net-coding-system 'utf-8-unix))
 
 ;;;; misc langs
 (straight-use-package 'glsl-mode)
@@ -518,8 +521,9 @@
           (line (number-to-string (line-number-at-pos))))
       (message (kill-new (concat link "#" line))))))
 
-
 ;;;; other
+(use-package evil)
+
 (when window-system
   (menu-bar-mode -1)
   (tool-bar-mode -1)
