@@ -525,9 +525,6 @@
 (use-package evil)
 
 (when window-system
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (set-frame-parameter (selected-frame) 'alpha 95)
   (server-start))
 
 (let ((machine-specific-file "~/.emacs.d/pc.el"))
