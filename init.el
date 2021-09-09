@@ -196,11 +196,14 @@
 
 
 ;;;; shell stuff
+(setq comint-process-echoes t)
+
 (load "~/.emacs.d/emacs-pager")
 
 (defun my-shell-mode-hook ()
   (setq comint-input-ring-file-name "~/.bash_history")
-  (comint-read-input-ring t))
+  (comint-read-input-ring t)
+  (compilation-shell-minor-mode))
 (add-hook 'shell-mode-hook 'my-shell-mode-hook)
 
 (setenv "EDITOR" "emacsclient")
